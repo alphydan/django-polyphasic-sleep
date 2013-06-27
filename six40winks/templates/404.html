@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Oooops, Page Not Found - 404 for the nerds" %}{% endblock %}
+
+
+{% block content %}
+  <div class="container">
+    <h2>{% trans "404. Sorry but the page you requested has lost its power source"  %} </h2>
+    <h2>{% trans "(it was probably diesel powered)." %} <img  src="{{ STATIC_URL }}img/tech/rusty-oil-barrel.png">  </h2>
+
+    <p> 
+      <button class="btn" type="button" VALUE="Back" onClick="history.go(-1);return true;">{% trans 'back' %}</button>
+      {% trans 'or return to the' %} <a href="/">{% trans 'homepage' %}</a></p>
+
+  </div>
+  
+{% endblock %}
+
+
+
+
+

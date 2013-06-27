@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Server Error - 500" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h3>{% trans "We're sorry but a server error has occurred." %} </h3>
+  <p>{% trans "Our solar powered robots are looking into it and should fix it soon." %}</p>
+  <p style="font-size:2em;">  <img  src="{{ STATIC_URL }}img/tech/solar_robot.png"> {% trans "(error 500)" %} </p>
+
+
+
+  <p> 
+    <button class="btn" type="button" VALUE="Back"  onClick="history.go(-1);return true;">{% trans 'back ' %}</button>{% trans ' or return to the' %} 
+    <a href="/">{% trans 'homepage' %}</a>
+  </p>
+
+</div> <!--/container--> 
+{% endblock %}

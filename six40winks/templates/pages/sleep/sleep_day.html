@@ -1,0 +1,28 @@
+{% extends "base.html" %} 
+{% load i18n %}
+
+{% block content %}
+
+<div class="container">
+  
+
+<h1>{{ date }} - total sleep: {{ total_sleep }}</h1>
+<h2>rem: {{total_rem}} | light: {{ total_light }} | deep: {{ total_deep }}</h2>
+<ul>
+    {% for sleep in sleep_episodes %}
+        <li>[{{sleep.sleep_phase}}] {{ sleep.date_bin|date:"F j, Y" }}: {{ sleep.start_dt }} -> {{ sleep.end_dt }}</li>
+    {% endfor %}
+</ul>
+
+<p>
+    {% if previous_day %}
+    <a href="">Previous Day: {{ previous_day }}</a>
+    {% endif %}
+    {% if previous_day and next_day %} === {% endif %}
+    {% if next_day %}
+        Next Day: {{ next_day }}
+    {% endif %}
+</p> 
+</div>
+
+{% endblock %}

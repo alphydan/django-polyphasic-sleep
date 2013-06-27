@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load i18n %}
+<html xmlns="https://www.w3.org/1999/xhtml" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
+{% block pre_head %}
+{% endblock %}
+
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+
+<!-- META -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="description" content="{% block meta_description %}{% trans "Independent advice to invest in renewable energy by the people for the world."%}{% endblock %}"/>
+    <meta name="author" content="re.nooble" />
+    <meta name="title" content="{% block meta_title %}{% trans "Save money with renewable energy" %}{% endblock %}" />
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}{% trans "solar, wind, small scale, world, geothermal, heat-pump, data, search-engine, renewables, save money, efficiency, renewable, renooble" %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <!-- ########## THIS IS FOR PRODUCTION ############# -->
+    <link href="{{STATIC_URL}}css/bootstrap.min.css" rel='stylesheet' >
+    <link href="{{STATIC_URL}}css/bootstrap-responsive.min.css" rel='stylesheet' >
+    <!--[if IE 7]><link rel="stylesheet" href="{{STATIC_URL}}css/font-awesome-ie7.css"><![endif]-->
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- ### favicon for the top and icons for ipad and iphone ### -->
+        <link rel="shortcut icon" href="{{ STATIC_URL }}img/icons/favicon.ico" type="image/x-icon"/>
+        <link rel="shortcut" href="{{ STATIC_URL }}img/icons/favicon.ico" type="image/x-icon"/>
+        <link rel="apple-touch-icon" href="{{ STATIC_URL }}img/icons/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ STATIC_URL }}img/icons/iphone-renooble-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ STATIC_URL }}img/icons/ipad-renooble-icon-114x114.png"/>
+
+
+{% block extra_head %}
+{% endblock %}
+  </head>
+	<body {% block js_function %} {% endblock %}>
+
+	  <!-- Part 1: Wrap all page content here for sticky footer -->
+	  <div id="wrap">
+
+	  {% block topbar %}
+           {# include "topbar/simple-menu.html" #}
+          {% endblock %}
+
+	  {% block banner %}
+	  {% endblock %}
+
+         {% block content %}
+         {% endblock %}
+
+
+	  <div id="push"></div>
+	  </div>
+
+         {% block footer %}
+           {# include "footer/sticky-footer.html" #}
+         {% endblock %}
+
+	  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	 <!-- <script src="{{STATIC_URL}}js/jquery-1.7.2.min.js"></script> -->
+	 <!-- <script src="{{STATIC_URL}}js/jquery.ui.min.js"></script> -->
+	 <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+         {% block extraJS %}
+         {% endblock %}
+
+	</body>
+</html>
+
