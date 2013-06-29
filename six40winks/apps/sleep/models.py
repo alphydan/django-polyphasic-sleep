@@ -1,4 +1,4 @@
-import datetime
+import datetime as dti
 from datetime import datetime
 
 from django.db import models
@@ -55,20 +55,29 @@ class SleepPhase(models.Model):
 
 class SleepDay(models.Model):
     '''Contains an Overview of the sleep amount during
-    a day (defined from noon of 1st day to noon of 2nd day'''
+    a day (defined from noon of 1st day to noon of 2nd day) in minutes'''
     date_bin = models.DateField('date bin')
-    total_sleep = models.PositiveIntegerField('Total Sleep', help_text='Total hours of sleep in a day', null=True, blank = True)
-    rem_sleep = models.PositiveIntegerField('REM Sleep', help_text='Total hours of REM sleep in a day', null=True, blank = True)
-    light_sleep = models.PositiveIntegerField('Light Sleep', help_text='Total hours of Light sleep in a day', null=True, blank = True)
-    deep_sleep = models.PositiveIntegerField('Deep Sleep', help_text='Total hours of Light sleep in a day', null=True, blank = True)
+    total_sleep = models.PositiveIntegerField('Total Sleep', help_text='Total minutes of sleep in a day', null=True, blank = True)
+    rem_sleep = models.PositiveIntegerField('REM Sleep', help_text='Total minutes of REM sleep in a day', null=True, blank = True)
+    light_sleep = models.PositiveIntegerField('Light Sleep', help_text='Total minutes of Light sleep in a day', null=True, blank = True)
+    deep_sleep = models.PositiveIntegerField('Deep Sleep', help_text='Total minutes of Light sleep in a day', null=True, blank = True)
 
     class Meta:
         ordering =['date_bin']
 
     def __unicode__(self):
-        return '%s -- %sh' % (self.date_bin, self.total_sleep)
+        total_h_mn = str(dti.timedelta( seconds = self.total_sleep*60))
+        return '%s -- %s' % (self.date_bin, total_h_mn)
 
-    
+    def float_hours(self):
+        return float(self.total_sleep)/60
+    def float_rem(self):
+        return float(self.rem_sleep)/60
+    def float_light(self):
+        return float(self.light_sleep)/60
+    def float_deep(self):
+        return float(self.deep_sleep)/60
+
     
 
 

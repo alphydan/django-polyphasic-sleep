@@ -1,6 +1,6 @@
 # python imports
 import datetime
-
+import time
 # django imports
 from django.db.models import Q
 from django.views.generic.base import TemplateView
@@ -9,7 +9,7 @@ from django.views.generic import DayArchiveView
 
 
 # six40winks imports
-from sleep.models import SleepPhase
+from sleep.models import SleepPhase, SleepDay
 
 # class SleepDayView(DayArchiveView):
 #     queryset = SleepPhase.objects.all()
@@ -47,38 +47,32 @@ def format_duration(t_delta):
     return total_sleep_duration_formatted
 
 
+def js_timestamp_from_datetime(dt):
+    return 1000 * time.mktime(dt.timetuple())
 
-class SleepOverView(TemplateView):
+
+class SleepOverView(ListView):
     template_name = 'pages/sleep/sleep_overview.html'
-    model = SleepPhase
-
-    def get_day_duration(self, **kwargs):
-        #  Calculate Total/REM/Deep/Light Sleep
-        day_sleep_duration = datetime.timedelta(0,0,0)
-        day_rem_duration = datetime.timedelta(0,0,0)
-        day_light_duration = datetime.timedelta(0,0,0)
-        day_deep_duration = datetime.timedelta(0,0,0)
-
-        list_of_durations = []
-        for x in SleepPhase.objects.all(): #kwargs['object_list']:
-            if x.sleep_phase > 1: # and x.sleep_phase <6:
-                # it's either wake, rem, light, deep or general sleep
-                day_sleep_duration += x.phase_duration()
-                if x.sleep_phase == 2:
-                    day_rem_duration += x.phase_duration()
-                if x.sleep_phase == 3:
-                    day_light_duration += x.phase_duration()
-                if x.sleep_phase == 4:
-                    day_deep_duration += x.phase_duration()
-                
-                list_of_durations.append([day_sleep_duration, day_rem_duration, day_light_duration, day_deep_duration])
-        print list_of_durations
-        return list_of_durations
+    model = SleepDay
+    context_object_name = 'all_sleep_days'
 
     def get_context_data(self, **kwargs):
-        return {'list_of_durations': self.get_day_duration()}
-
-
+        # Call the base implementation first to get a context
+        context = super(SleepOverView, self).get_context_data(**kwargs)
+        time_series = []
+        rem_series = []
+        light_series = []
+        deep_series = []
+        for x in context['object_list']:
+            time_series.append([js_timestamp_from_datetime(x.date_bin), x.float_hours()])   
+            rem_series.append([js_timestamp_from_datetime(x.date_bin), x.float_rem()])
+            light_series.append([js_timestamp_from_datetime(x.date_bin), x.float_light()])
+            deep_series.append([js_timestamp_from_datetime(x.date_bin), x.float_deep()])
+        context['time_series'] = time_series
+        context['rem_series'] = rem_series
+        context['light_series'] = light_series
+        context['deep_series'] = deep_series
+        return context
 
 
 class SleepDayView(ListView): 

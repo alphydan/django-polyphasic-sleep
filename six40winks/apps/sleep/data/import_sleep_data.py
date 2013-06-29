@@ -1,7 +1,7 @@
 import os
 import csv
 import datetime as dti
-from sleep.models import SleepPhase
+from sleep.models import SleepPhase, SleepDay
 
 
 
@@ -83,16 +83,20 @@ def load_sleep_data():
 
                     
 def create_sleep_days():
+    'Aggregate the sleep phases into days'
+
+    # how many days did the experiment last?
     first_date = SleepPhase.objects.order_by('date_bin')[0]
     last_date = SleepPhase.objects.order_by('-date_bin')[0]
-    
+    experiment_length = last_date.date_bin - first_date.date_bin    
+
     print first_date.date_bin, last_date.date_bin
     i_year = first_date.date_bin.year
     i_month = first_date.date_bin.month
     i_day =  first_date.date_bin.day
 
     
-    experiment_length = last_date.date_bin - first_date.date_bin
+
     for d in range(experiment_length.days):
         given_day = dti.datetime(i_year, i_month, i_day, 12,0,0) + dti.timedelta(days = d)
         first_mid_day = dti.datetime( given_day.year, given_day.month, given_day.day, 12, 0,0)
@@ -105,18 +109,30 @@ def create_sleep_days():
         day_light_duration = dti.timedelta(0,0,0)
         day_deep_duration = dti.timedelta(0,0,0)
 
-        for x in phases_in_day:
-            if x.sleep_phase > 1: # and x.sleep_phase <6:
-                # it's either wake, rem, light, deep or general sleep
-                day_sleep_duration += x.phase_duration()
-                if x.sleep_phase == 2:
-                    day_rem_duration += x.phase_duration()
-                if x.sleep_phase == 3:
-                    day_light_duration += x.phase_duration()
-                if x.sleep_phase == 4:
-                    day_deep_duration += x.phase_duration()
+        if phases_in_day:
+            for x in phases_in_day:
+                if x.sleep_phase > 1: # and x.sleep_phase <6:
+                    # it's either wake, rem, light, deep or general sleep or snooze
+                    day_sleep_duration += x.phase_duration()
+                    if x.sleep_phase == 2:
+                        day_rem_duration += x.phase_duration()
+                    if x.sleep_phase == 3:
+                        day_light_duration += x.phase_duration()
+                    if x.sleep_phase == 4:
+                        day_deep_duration += x.phase_duration()
+            sleep_day = SleepDay()
+            sleep_day.date_bin = dti.date(given_day.year, given_day.month, given_day.day)
+            sleep_day.total_sleep = tdelta_to_minutes(day_sleep_duration)
+            sleep_day.rem_sleep = tdelta_to_minutes(day_rem_duration)
+            sleep_day.light_sleep = tdelta_to_minutes(day_light_duration)
+            sleep_day.deep_sleep = tdelta_to_minutes(day_deep_duration)
+            sleep_day.save()
+            print [given_day, format_duration(day_sleep_duration), day_rem_duration.seconds, format_duration(day_rem_duration), format_duration(day_light_duration), format_duration(day_deep_duration)]
 
-        print [given_day, format_duration(day_sleep_duration)]
+
+def tdelta_to_minutes(t_delta):
+    ''' convert timedelta to number of minutes '''
+    return t_delta.days*60*24 + t_delta.seconds/60
 
 
 def format_duration(t_delta):

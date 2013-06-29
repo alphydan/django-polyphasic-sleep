@@ -6,13 +6,45 @@
 <div class="container">
   
 
-<h1>{{ date }} - total sleep: {{ total_sleep }}</h1>
-<h2>rem: {{total_rem}} | light: {{ total_light }} | deep: {{ total_deep }}</h2>
-<ul>
-    {% for sleep in list_of_durations %}
-        <li>[{{sleep}}]</li>
-    {% endfor %}
-</ul>
+
+<div class="hero-unit">
+<h1>Polyphasic sleep overview:</h1>  
+</div>
+
+
+<div class="lead">
+<h2 class="text-center"> Daily hours of sleep (h)</h2>
+<div id="sleep_chart" style="width:1000px;height:500px"></div>  
+</div>
+
+
+
+<p>Zoom to: <button id="whole">Whole period</button></p>
+<p>Zoom to: <button id="2011">2011</button>
+<p>Zoom to: <button id="2012">2012</button> 
+<button id="2012-01">Jan/Feb</button>
+<button id="2012-03">Mar/Apr</button> 
+<button id="2012-05">May/Jun</button>
+<button id="2012-07">Jul/Aug</button>
+<button id="2012-09">Sept/Oct</button>
+<button id="2012-11">Nov/Dec</button>
+</p>
+<p>Zoom to: <button id="2013">2013</button> 
+<button id="2013-01">Jan/Feb</button>
+<button id="2013-03">Mar/Apr</button> 
+<button id="2013-05">May/Jun</button>
+<button id="2013-07">Jul/Aug</button>
+</p>
+
+<br /><br /><br />
+<hr />
+<br /><br />
+<div class="lead">
+<h2 class="text-center"> Daily hours of sleep [rem, light, deep] (h)</h2>
+<div id="stacked_sleep" style="width:1000px;height:500px"></div>  
+</div>
+
+
 
 <p>
     {% if previous_day %}
@@ -25,4 +57,231 @@
 </p>
 </div>
 
+{% endblock %}
+
+{% block extraJS %}
+<script type="text/javascript" src="{{STATIC_URL}}js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/flot/jquery.flot.time.min.js"></script>    
+<script type="text/javascript" src="{{STATIC_URL}}js/flot/jquery.flot.symbol.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/flot/jquery.flot.stack.min.js"></script>
+
+
+
+
+<script type="text/javascript">
+  var sleep_data = {{ time_series}};
+  var eight_hour_sleep = [[1323561600000.0, 8],[1372201200000.0, 8]];
+  var four_hour_sleep = [[1323561600000.0, 4],[1372201200000.0, 4]];
+  
+
+dataset = [
+  {
+      label: "Daily hours of sleep",
+      data: sleep_data,
+      bars: {
+      show: true,
+      align: "center",
+      lineWidth:1,
+      barWidth: 24 * 60 * 60 * 900,
+        }
+    },
+  {
+      label: "8h sleep",
+      data: eight_hour_sleep,
+      lines: {show: true},
+    },
+{
+        label: "4h sleep",
+        data: four_hour_sleep,
+        lines: { show: true },
+    } 
+];
+
+
+options ={ xaxis: { mode: "time" }}
+
+$(document).ready(function () {
+    $.plot($("#sleep_chart"), dataset, options);
+
+    $("#whole").click(function () {
+        $.plot($("#sleep_chart"), dataset, options);
+    });
+/* ---- 2011 ---*/
+    $("#2011").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2011, 11, 1)).getTime(),
+                max: (new Date(2011, 12, 1)).getTime()
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012 ---*/
+    $("#2012").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2012, 1, 1)).getTime(),
+                max: (new Date(2012, 12, 1)).getTime()
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012-1 ---*/
+    $("#2012-01").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2011, 12, 1)).getTime(),
+                max: (new Date(2012, 2, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012-3 ---*/
+    $("#2012-03").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2012, 2, 1)).getTime(),
+                max: (new Date(2012, 4, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012-5 ---*/
+    $("#2012-05").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2012, 4, 1)).getTime(),
+                max: (new Date(2012, 6, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012-7 ---*/
+    $("#2012-07").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2012, 6, 1)).getTime(),
+                max: (new Date(2012, 8, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012-9 ---*/
+    $("#2012-09").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2012, 8, 1)).getTime(),
+                max: (new Date(2012, 10, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2012-11 ---*/
+    $("#2012-11").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2012, 10, 1)).getTime(),
+                max: (new Date(2012, 12, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2013 ---*/
+    $("#2013").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2013, 1, 1)).getTime(),
+                max: (new Date(2013, 12, 1)).getTime()
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2013-1 ---*/
+    $("#2013-01").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2013, 12, 1)).getTime(),
+                max: (new Date(2013, 2, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2013-3 ---*/
+    $("#2013-03").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2013, 2, 1)).getTime(),
+                max: (new Date(2013, 4, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2013-5 ---*/
+    $("#2013-05").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2013, 4, 1)).getTime(),
+                max: (new Date(2013, 6, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+/* ---- 2013-7 ---*/
+    $("#2013-07").click(function () {
+        $.plot($("#sleep_chart"), dataset, {
+            xaxis: {
+                mode: "time",
+                min: (new Date(2013, 6, 1)).getTime(),
+                max: (new Date(2013, 8, 1)).getTime(),
+            }
+        });
+    });
+/*-----------------*/
+
+});
+
+</script>
+
+<script type="text/javascript">
+$(function () {
+    var d1 = {{ rem_series}};
+
+    var d2 = {{ light_series }};
+
+    var d3 = {{ deep_series }};
+
+    var stack = 4, bars = true, lines = false, steps = false;
+    
+//    function plotWithOptions() {
+        $.plot($("#stacked_sleep"), [ d1, d2, d3 ], {
+            series: {
+                stack: stack,
+                lines: { show: lines, fill: true, steps: steps },
+                bars: { show: bars, 
+                        barWidth: 24*60*60*900,
+                        align: "center",
+                        lineWidth:1,
+  }
+            },
+            xaxis: { mode: "time", 
+                min: (new Date(2012, 2, 1)).getTime(),
+                max: (new Date(2012, 4, 1)).getTime(),
+                   }
+        });
+//    }
+});
+
+</script>
 {% endblock %}

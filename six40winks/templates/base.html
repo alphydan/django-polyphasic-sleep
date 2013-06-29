@@ -24,6 +24,8 @@
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
         <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
+
         <![endif]-->
 
         <!-- ### favicon for the top and icons for ipad and iphone ### -->
@@ -60,8 +62,8 @@
            {# include "footer/sticky-footer.html" #}
          {% endblock %}
 
-	  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	 <!-- <script src="{{STATIC_URL}}js/jquery-1.7.2.min.js"></script> -->
+	  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	 <!-- <script src="{{STATIC_URL}}js/jquery-1.10.1.min.js"></script> -->
 	 <!-- <script src="{{STATIC_URL}}js/jquery.ui.min.js"></script> -->
 	 <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
          {% block extraJS %}
